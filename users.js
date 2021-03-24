@@ -1,29 +1,24 @@
-const express = require('express')
-const app = express()
+const db = require('./db.js')
 
 const users = {}
 
-const db = require('./db.js')
-
 users.get = (credentials) => {
-  return db.collection('users').where('email', '==', credentials.email).where('password', '==', credentials.password).get().then(snapshot => {
-    if (!snapshot.empty) {
+  console.log(credentials)
+  return db.collection('users').where('email', '==', credentials.email)
+  .get().then(snapshot => {
+    if (snapshot.size) {
       snapshot.docs.map(doc => {
         return {status: 400, message: "User found", user: doc.data()}
       })
+    } else {
+      return {status: 404, message: "User not found", user: null}
     }
-    return {status: 404, message: "User not found", user: null}
   })
 }
-app.get('/user/get', (req, res) => {
-  users.get(req.body).then(response => {
-    res.send(response)
-  })
-})
 
 users.register = (user) => {
   return db.collection('users').where('email', '==', user.email).get().then(async snapshot => {
-    if (snapshot.empty) {
+    if (!snapshot.size) {
       var postedUser = await db.collection('users').add(user)
       console.log(postedUser, postedUser.id)
       return {status: 200, message: "User succesfully registered", body: postedUser}
@@ -32,10 +27,5 @@ users.register = (user) => {
     }
   })
 }
-app.post('/user/register', (req, res) => {
-  users.register(req.body).then(response => {
-    res.send(response)
-  })
-})
 
 module.exports = users

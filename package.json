@@ -7,10 +7,14 @@
     "start": "nodemon server.js",
     "test": "npm run test"
   },
+  "engines": {
+    "node": ">=0.15"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.5.0",
     "nodemon": "^2.0.7"
