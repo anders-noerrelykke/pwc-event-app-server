@@ -6,6 +6,7 @@ const port = 5000
 
 const users = require('./users.js')
 const events = require('./events.js')
+const userEvents = require('./userEvents')
 
 app.use(express.json())
 app.use(cors())
@@ -27,6 +28,12 @@ app.post('/user/get', (req, res) => {
   })
 })
 
+app.get('/user/getAll', (req, res) => {
+  users.getAll().then(response => {
+    res.send(response)
+  })
+})
+
 app.post('/user/register', (req, res) => {
   users.register(req.body).then(response => {
     res.send(response)
@@ -34,8 +41,15 @@ app.post('/user/register', (req, res) => {
 })
 
 // EVENTS
-app.get('/event/getAll', (req, res) => {
-  events.getAll().then(response => {
+app.get('/userEvent/getAllEventsWithParticipants', (req, res) => {
+  userEvents.getAllEventsWithParticipants().then(response => {
+    res.send(response)
+  })
+})
+
+// USEREVENTS
+app.post('/userEvent/signUp', (req, res) => {
+  userEvents.signUp(req.body).then(response => {
     res.send(response)
   })
 })
